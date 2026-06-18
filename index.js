@@ -853,7 +853,160 @@
 //   console.log(`Example app listening on port ${port}`)
 // }) 
 // // ---------------------End:58_9-(1) to () --------------------------------
-// -----------------------------Start: 59_3---------------------------------------
+// // -----------------------------Start: 59_3---------------------------------------
+// const express = require('express')
+
+// const cors = require('cors');
+
+// const app = express()
+
+// const port = 5000
+
+// require('dotenv').config()
+
+// app.use(cors());
+// app.use(express.json());
+
+// const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
+// app.get('/', (req, res) => {
+//   res.send('Hello World!')
+// })
+
+// const uri = process.env.MONGO_DB_URI;
+
+
+// const client = new MongoClient(uri, {
+//   serverApi: {
+//     version: ServerApiVersion.v1,
+//     strict: true,
+//     deprecationErrors: true,
+//   }
+// });
+
+// async function run() {
+//   try {
+    
+//     await client.connect();
+    
+//     const database = client.db("hireloop_db");
+//     const jobCollection = database.collection("jobs");     
+//     const companyCollection = database.collection("companies");
+//     const userCollection = database.collection("user");
+//     // (5)
+//     const applicationsCollection = database.collection("applications");
+
+    
+//     app.get('/api/user', async (req, res) => {
+
+//       // const cursor = usersCollection.find().skip(6);
+//       const cursor = usersCollection.find().skip(4);
+//       const result = await cursor.toArray();
+//       res.send(result);
+//     })
+    
+
+    
+//     app.get('/api/jobs', async(req, res) =>{
+//       const query = {};
+//       if(req.query.companyId){
+//         query.companyId = req.query.companyId;
+//       }
+//       if(req.query.status){
+//         query.status = req.query.status;
+//       }
+//       const cursor = jobCollection.find(query);   
+//       // const cursor = jobCollection.find(query).skip(7);   
+//       const result = await cursor.toArray();
+//       res.send(result);
+//     })
+    
+    
+//     app.get('/api/jobs/:id', async (req, res) =>{
+//       const id = req.params.id;
+//       const query = {
+//         _id: new ObjectId(id)
+//       }
+//       const result = await jobCollection.findOne(query);
+//       res.send(result);
+//     })
+    
+    
+//     app.post('/api/jobs', async (req, res) => {
+//       const job = req.body;
+
+//       const newJob ={
+//         ...job,
+//         createdAt: new Date()
+//       }
+
+//       const result = await jobCollection.insertOne(newJob);
+//       res.send(result);
+    
+//     })
+
+//     // application related apis
+//     // (6)st
+//     app.post('/api/applications', async (req, res) => {
+//       const application = req.body;
+//       const newApplication = {
+//         ...application,
+//         createdAt: new Date()
+//       }
+//       const result = await applicationsCollection.insertOne(newApplication);
+//       res.send(result);
+//     })
+//     // (6)en then go to client and create lib/actions/applications.js
+
+//     // company related apis
+    
+//     app.get('/api/companies', async (req, res) => {
+    
+//       const cursor = companyCollection.find();
+//       const result = await cursor.toArray();
+//       res.send(result);
+//     })
+    
+
+//     app.get('/api/my/companies', async(req, res) =>{
+//       const query = {};
+//       if(req.query.recruiterId){
+//         query.recruiterId = req.query.recruiterId;
+//       }
+//       const result = await companyCollection.findOne(query);
+      
+//       console.log('my companies:', result);
+      
+//       res.send(result || {});
+//     })
+    
+    
+//     app.post('/api/companies', async(req, res) =>{
+//       const company = req.body;
+
+//       const newCompany ={
+//         ...company,
+//         createdAt: new Date()
+//       }
+
+//       const result = await companyCollection.insertOne(newCompany);
+//       res.send(result);
+//     })
+    
+    
+//     await client.db("admin").command({ ping: 1 });
+//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//   } finally {
+    
+//   }
+// }
+// run().catch(console.dir);
+
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// }) 
+// // ---------------------End:59_3-(1) to () --------------------------------
+// -----------------------------Start: 59_4---------------------------------------
 const express = require('express')
 
 const cors = require('cors');
@@ -893,7 +1046,7 @@ async function run() {
     const jobCollection = database.collection("jobs");     
     const companyCollection = database.collection("companies");
     const userCollection = database.collection("user");
-    // (5)
+    
     const applicationsCollection = database.collection("applications");
 
     
@@ -946,7 +1099,21 @@ async function run() {
     })
 
     // application related apis
-    // (6)st
+    // (1)st
+    app.get('/api/applications', async (req, res) => {
+      const query = {};
+      if(req. query. applicantId){
+        query.applicantId = req.query.applicantId;
+      }
+      if(req.query.jobId){
+        query.jobId = req.query.jobId;
+      }
+      const cursor = applicationsCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result)
+    }) 
+    // (1)en then go to client and create lib/api/applications.js
+    
     app.post('/api/applications', async (req, res) => {
       const application = req.body;
       const newApplication = {
@@ -956,7 +1123,7 @@ async function run() {
       const result = await applicationsCollection.insertOne(newApplication);
       res.send(result);
     })
-    // (6)en then go to client and create lib/actions/applications.js
+    
 
     // company related apis
     
@@ -1005,4 +1172,4 @@ run().catch(console.dir);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 }) 
-// ---------------------End:59_3-(1) to () --------------------------------
+// ---------------------End:59_4-(1) to () --------------------------------
